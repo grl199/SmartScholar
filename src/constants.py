@@ -1,0 +1,12 @@
+'''
+Constants file
+'''
+
+PROJECT_ID='12345'
+DATASET_ID='abcde'
+TABLE_NAME='AcademicPapers'
+
+
+DEFAULT_API_KEY='None'
+DEFAULT_TEMPERATURE = 0.5
+DEFAULT_LLM_MODEL = "gpt2"
