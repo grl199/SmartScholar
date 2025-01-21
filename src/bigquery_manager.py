@@ -1,9 +1,12 @@
-from google.cloud import bigquery
-import constants
+'''
+Class to manage BigQuery table operations such as creating a table,
+'''
+
 import logging
 import os
-import Exception
 
+import constants
+from google.cloud import bigquery
 from google.cloud.exceptions import NotFound
 
 logger = logging.getLogger('bigquery_manager')
@@ -13,11 +16,16 @@ class BigQueryTableManager:
     A class to manage BigQuery table operations such as creating a table,
     adding rows, and reading the table.
     """
-    def __init__(self):
+    def __init__(self, config):
         """
         Initializes the BigQueryTableManager with the table ID and BigQuery client.
         """
-        self.table_id = f"{constants.PROJECT_ID}.{constants.DATASET_ID}.{constants.TABLE_NAME}"
+
+        project_id = config.get('bigquery').get('project_id',constants.PROJECT_ID)
+        dataset_id = config.get('bigquery').get('dataset_id',constants.DATASET_ID)
+        table_name = config.get('bigquery').get('table_name',constants.TABLE_NAME)
+
+        self.table_id = f"{project_id}.{dataset_id}.{table_name}"
 
         logger.info('Initializing BigQuery client...')
 
@@ -28,10 +36,22 @@ class BigQueryTableManager:
             try:
                 self.client = bigquery.Client()
             except Exception as e:
-                logger.exception(f"Error initializing BigQuery client: {e}")
+                logger.exception("Error initializing BigQuery client: %s", e)
                 self.client = None
 
-    def setup_bq_table(self, schema):
+        self.config = config
+
+
+    def clean_up_schema(self):
+        schema = [
+        bigquery.SchemaField(
+            field["name"], field["type"], mode=field["mode"], description=field.get("description")
+        )
+        for field in self.config["bigquery"]["schema"]
+        ]
+        return schema
+
+    def setup_bq_table(self, schema: list = None):
         """
         Creates a BigQuery table with the given schema.
 
@@ -51,6 +71,10 @@ class BigQueryTableManager:
                 logger.info('Table already exists.')
             except NotFound:
                 # Define the table
+
+                if not schema:
+                    schema = self.clean_up_schema()
+
                 table = bigquery.Table(self.table_id, schema=schema)
 
                 # Create the table in BigQuery

@@ -1,25 +1,48 @@
-import pytest
+'''
+conftest.py
+'''
+
 import os
-from unittest.mock import patch
 import sys
+
+import pytest
+
+import constants
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-import logging
-logging.basicConfig(
-    level=logging.INFO,  # Cambia a INFO, WARNING, etc., según lo necesario
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-)
+from bigquery_manager import BigQueryTableManager
+from utilities import read_config,set_logger
 
-logger = logging.getLogger('conftest')
+CONFIG = read_config('config.yaml')
+
+os.environ['HUGGINGFACEHUB_API_TOKEN'] = \
+    os.getenv('HUGGINGFACEHUB_API_TOKEN',constants.DEFAULT_API_KEY)
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = \
+    os.getenv('GOOGLE_APPLICATION_CREDENTIALS',constants.DEFAULT_API_KEY)
+
+@pytest.fixture(scope='session', autouse=True)
+def config():
+    """
+    Fixture to get the configuration file for the test session.
+    """
+    return CONFIG
+
+@pytest.fixture(scope='session', autouse=True)
+def logger():
+    """
+    Fixture to set up the logger for the test session.
+    """
+    logger_object = set_logger(CONFIG)
+    return logger_object
 
 
 @pytest.fixture(scope='session', autouse=True)
-def set_google_credentials():
+def big_query_manager_instance():
     """
-    Fixture to set the GOOGLE_APPLICATION_CREDENTIALS environment variable for the test session.
+    Fixture to set up the BigQueryTableManager for the test session.
     """
-    with patch.dict(os.environ, {'GOOGLE_APPLICATION_CREDENTIALS': 'path/to/your/credentials.json'}):
-        yield
+  
+    return BigQueryTableManager(CONFIG)
 
 @pytest.fixture
 def sample_pdf_file():
