@@ -9,6 +9,7 @@ import logging
 import json
 from typing import Literal
 from dotenv import load_dotenv
+import streamlit as st
 
 
 
@@ -229,7 +230,7 @@ if __name__ == '__main__':
 
     logger = set_logger(config = config)
 
-    import streamlit as st
+    
     st.title("PDF File Processor")
     st.write("Upload a PDF file to process its content.")
 
