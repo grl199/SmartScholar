@@ -16,6 +16,7 @@ langchain-huggingface = "*"
 google-cloud-bigquery = "*"
 pytest-cov = "*"
 python-dotenv = "*"
+streamlit = "*"
 
 [dev-packages]
 pandas = "*"

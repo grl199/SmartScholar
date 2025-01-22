@@ -229,9 +229,22 @@ if __name__ == '__main__':
 
     logger = set_logger(config = config)
 
+    import streamlit as st
+    st.title("PDF File Processor")
+    st.write("Upload a PDF file to process its content.")
+
+    # File uploader
+    uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
+
+
     if 'pdf_file' in args:
         pdf_file = args.pdf
+    elif uploaded_file:
+        logger.info('Processing uploaded file')
+        pdf_file = uploaded_file
     else:
         pdf_file = config.get('inputs').get('pdf_path')
+
+
 
     main(config = config, pdf_file=pdf_file)
