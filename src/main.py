@@ -236,7 +236,6 @@ if __name__ == '__main__':
     # File uploader
     uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
 
-
     if 'pdf_file' in args:
         pdf_file = args.pdf
     elif uploaded_file:
@@ -244,7 +243,5 @@ if __name__ == '__main__':
         pdf_file = uploaded_file
     else:
         pdf_file = config.get('inputs').get('pdf_path')
-
-
 
     main(config = config, pdf_file=pdf_file)

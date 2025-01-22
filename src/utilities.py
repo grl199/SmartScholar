@@ -1,17 +1,22 @@
 import PyPDF2
 import yaml
 import logging
+import streamlit as st
 
 
-def extract_pdf_text(pdf_path):
+def extract_pdf_text(pdf):
     '''
     Function used to extract raw text from a pdf
     '''
-    with open(pdf_path, 'rb') as file:
+    if type(pdf) == str:
+        file = open(pdf, 'rb')
         reader = PyPDF2.PdfReader(file)
-        text = ""
-        for page in reader.pages:
-            text += page.extract_text()
+    else:
+        reader = PyPDF2.PdfReader(pdf)
+    text = ''
+    for page in reader.pages:
+        text += page.extract_text()
+
     return text
 
 def read_config(file):
