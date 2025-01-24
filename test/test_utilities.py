@@ -2,7 +2,7 @@
 Script to test utilities.py (miscellaneous functions)
 '''
 
-from utilities import extract_pdf_text, read_config, set_logger
+from src.utilities import extract_pdf_text, read_config, set_logger
 
 
 def test_extract_pdf_text(sample_pdf_file,logger):

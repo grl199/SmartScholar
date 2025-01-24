@@ -3,17 +3,13 @@ conftest.py
 '''
 
 import os
-import sys
-
 import pytest
 
-import constants
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+from src.bigquery_manager import BigQueryTableManager
+from src.utilities import read_config,set_logger
+from src import constants
 
-from bigquery_manager import BigQueryTableManager
-from utilities import read_config,set_logger
-
-CONFIG = read_config('config.yaml')
+CONFIG = read_config('test/resources/test_config.yaml')
 
 os.environ['HUGGINGFACEHUB_API_TOKEN'] = \
     os.getenv('HUGGINGFACEHUB_API_TOKEN',constants.DEFAULT_API_KEY)

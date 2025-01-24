@@ -22,4 +22,3 @@ bigquery:
 inputs:
   llm_model: 'TEST'
   temperature: 0.7
-  pdf_path: test/resources/sample.pdf
