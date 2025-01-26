@@ -4,6 +4,7 @@ Class to manage BigQuery table operations such as creating a table,
 
 import logging
 import os
+import streamlit as st
 
 import constants
 from google.cloud import bigquery
@@ -28,9 +29,9 @@ class BigQueryTableManager:
         self.table_id = f"{project_id}.{dataset_id}.{table_name}"
 
         logger.info('Initializing BigQuery client...')
-
-        if os.environ['GOOGLE_APPLICATION_CREDENTIALS']=='None':
-            logger.warning('GOOGLE_APPLICATION_CREDENTIALS not set. BigQuery client not initialized.')
+        if constants.STORAGE_PROVIDER_CREDENTIALS not in os.environ:
+            logger.warning(f'{constants.STORAGE_PROVIDER_CREDENTIALS} not set. BigQuery client not initialized.')
+            st.warning(f'{constants.STORAGE_PROVIDER_CREDENTIALS} not set. BigQuery client not initialized.')
             self.client = None
         else:
             try:
@@ -97,7 +98,9 @@ class BigQueryTableManager:
         # Insert the row into the table
         if self.client:
             self.client.insert_rows_json(self.table_id, [row])  # Wrap row in a list
+            st.success("Row inserted successfully!")
         else:
+            st.warning("BigQuery client not initialized. Cannot insert row.")
             logger.error("BigQuery client not initialized. Cannot insert row.")
             return self
 

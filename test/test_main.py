@@ -1,6 +1,6 @@
 # We will test the main method here
 
-from main import main
+from src.main import main
 
 def test_main(config, sample_pdf_file):
     '''

@@ -8,6 +8,7 @@ import argparse
 from typing import Any
 import logging
 import json
+import pandas as pd
 from typing import Literal
 from dotenv import load_dotenv
 import streamlit as st
@@ -15,7 +16,7 @@ import streamlit as st
 
 
 from langgraph.graph import StateGraph
-from langchain_community.llms import HuggingFaceHub
+from langchain_openai import ChatOpenAI
 from langgraph.graph import START, END 
 
 
@@ -98,21 +99,17 @@ def extract_sections(state):
         st.write('Test mode: Default output:')
         state.raw_sections = default_output
     else:
-        prompt = f'Extract the following key components of the paper: title, abstract, authors,\
-                publication_date, journal, methodology and conclusions. Return only the result in a json\
-                format with these components as keys. The paper is given as follows:     {state.raw_text}.\
-                An example of the expected output is: {default_output}'
+        prompt = f'Extract the following key components of the paper: {str(json.loads(default_output).keys())}.\
+                Return only the result in a json format with these components as keys. The paper is given as follows:{state.raw_text}.\
+                An example of the expected output is: {default_output}.'
 
 
-        state.raw_sections = MODEL.invoke(prompt)
+        state.raw_sections = MODEL.invoke(prompt).content
+        logger.info('Raw output from LLM: %s', state.raw_sections)
     
     state.sections = json.loads(state.raw_sections)
-    st.write(f'{state.sections}')
-    logger.info('%s', state.sections)
-
 
     return state
-
 
 
 def check_llm_output(state)-> Literal["extract_sections", 'load_row_big_query']:
@@ -131,10 +128,17 @@ def check_llm_output(state)-> Literal["extract_sections", 'load_row_big_query']:
         assert json_object.keys() == {'title', 'abstract', 'publication_date', 'journal', 'authors', 'summary', 'keywords'}
 
         logger.info("Sections extracted succcessfully")
+
+        st.write('Following extracted sections are to be loaded into a BigQuery table:')
+        st.table(pd.DataFrame(list(state.sections.items()), columns=['Section', 'Value']))
+
+    
         return 'load_row_big_query'
+
 
     except ValueError as e:
         logger.error("%s: Output is not correct.", str(e))
+        st.write('Output is not correct. Please try again.')
         return 'extract_sections'  # Returns to llm node to try again
     
 
@@ -151,8 +155,6 @@ def load_row_big_query(state):
     return state
 
 
-
-
 def main(config = read_config('config.yaml'),
          pdf_file:str = None,
          draw:bool = False,
@@ -161,17 +163,12 @@ def main(config = read_config('config.yaml'),
     Main method
     '''
     
-    load_dotenv()
-    os.environ['HUGGINGFACEHUB_API_TOKEN'] = os.getenv('HUGGINGFACEHUB_API_TOKEN',constants.DEFAULT_API_KEY)
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.getenv('GOOGLE_APPLICATION_CREDENTIALS',constants.DEFAULT_API_KEY)
-
-
     global MODEL
     if config['inputs'].get('llm_model',constants.DEFAULT_LLM_MODEL) == 'TEST':
         MODEL = 'TEST'
     else:
-        MODEL =  HuggingFaceHub(repo_id=config['inputs'].get('llm_model',constants.DEFAULT_LLM_MODEL),
-                                model_kwargs={"temperature": config['inputs'].get('temperature',constants.DEFAULT_TEMPERATURE)})
+        MODEL =  ChatOpenAI(model=config['inputs'].get('llm_model',constants.DEFAULT_LLM_MODEL),
+                            temperature=config['inputs'].get('temperature',constants.DEFAULT_TEMPERATURE))
 
 
     logger.info("Processing file: %s", pdf_file)
@@ -247,8 +244,6 @@ if __name__ == '__main__':
     
     config = read_config(args.conf)
     logger = set_logger(config = config)
-
-    
 
 
     # File uploader

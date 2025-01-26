@@ -1,7 +1,6 @@
 import PyPDF2
 import yaml
 import logging
-import streamlit as st
 
 
 def extract_pdf_text(pdf):
@@ -16,9 +15,8 @@ def extract_pdf_text(pdf):
     text = ''
     for page in reader.pages:
         text += page.extract_text()
-
+        
     return text
-
 def read_config(file):
     '''
     Read the config file

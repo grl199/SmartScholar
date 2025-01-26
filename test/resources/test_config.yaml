@@ -1,3 +1,5 @@
+log_level: INFO
+log_format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 bigquery:
   project_id: astrafy
   dataset_id: smart_scholar
@@ -21,4 +23,4 @@ bigquery:
       description: "List of keywords."
 inputs:
   llm_model: 'TEST'
-  temperature: 0.7
+  temperature: 0.001

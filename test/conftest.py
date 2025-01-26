@@ -7,14 +7,9 @@ import pytest
 
 from src.bigquery_manager import BigQueryTableManager
 from src.utilities import read_config,set_logger
-from src import constants
 
 CONFIG = read_config('test/resources/test_config.yaml')
 
-os.environ['HUGGINGFACEHUB_API_TOKEN'] = \
-    os.getenv('HUGGINGFACEHUB_API_TOKEN',constants.DEFAULT_API_KEY)
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = \
-    os.getenv('GOOGLE_APPLICATION_CREDENTIALS',constants.DEFAULT_API_KEY)
 
 @pytest.fixture(scope='session', autouse=True)
 def config():
