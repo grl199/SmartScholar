@@ -9,6 +9,7 @@ pytest = "*"
 pypdf2 = "*"
 langgraph = "*"
 langchain = "*"
+langchain-openai = '*'
 ipython = "*"
 google-cloud-bigquery = "*"
 pytest-cov = "*"
