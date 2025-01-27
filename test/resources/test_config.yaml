@@ -1,0 +1,26 @@
+log_level: INFO
+log_format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+bigquery:
+  project_id: astrafy
+  dataset_id: smart_scholar
+  table_name: papers_summary
+  schema:
+    - name: "title"
+      type: "STRING"
+      mode: "REQUIRED"
+      description: "Title of the entry."
+    - name: "authors"
+      type: "STRING"
+      mode: "REPEATED"
+      description: "List of authors."
+    - name: "summary"
+      type: "STRING"
+      mode: "NULLABLE"
+      description: "Summary of the entry."
+    - name: "keywords"
+      type: "STRING"
+      mode: "REPEATED"
+      description: "List of keywords."
+inputs:
+  llm_model: 'TEST'
+  temperature: 0.001

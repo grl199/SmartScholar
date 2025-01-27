@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pandas = "*"
+pytest = "*"
+pypdf2 = "*"
+langgraph = "*"
+langchain = "*"
+langchain-openai = '*'
+ipython = "*"
+google-cloud-bigquery = "*"
+pytest-cov = "*"
+python-dotenv = "*"
+streamlit = "*"
+langchain-community = "*"
+
+
+[dev-packages]
+pandas = "*"
+
+[requires]
+python_version = "3.11"
