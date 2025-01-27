@@ -1,11 +1,7 @@
 # SmartScholar
 
 
-# SmartScholar
-
 ![Example Smart Scholar](test/resources/example_smart_scholar.png)
-
-Description of your project...
 
 Design of a LangGraph architecture that takes an academic paper as an input (pdf), extracts the relevant sections, summaries, and keywords, and loads the result as structured data in a database on GCP BigQuery.
 
