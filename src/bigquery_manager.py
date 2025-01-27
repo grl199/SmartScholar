@@ -6,9 +6,11 @@ import logging
 import os
 import streamlit as st
 
-import constants
+
 from google.cloud import bigquery
 from google.cloud.exceptions import NotFound
+
+import constants
 
 logger = logging.getLogger('bigquery_manager')
 
