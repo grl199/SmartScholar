@@ -35,10 +35,10 @@ pipenv install
 Set up environment variables: Create a .env file in the root directory of your project and add the following environment variables: 
 
 ```
-HUGGINGFACEHUB_API_TOKEN=your_huggingfacehub_api_token 
+OPENAI_API_KEY=your_open_api_token 
 GOOGLE_APPLICATION_CREDENTIALS=path/to/your/credentials.json
 ```
-GOOGLE_APPLICATION_CREDENTIALS is mandatory. HUGGINGFACEHUB_API_TOKEN may be replaced by any API token needed for the user's preferred LLM. Modify config.yaml just in case the user wants to make use of a specifict LLM
+GOOGLE_APPLICATION_CREDENTIALS is mandatory. OPENAI_API_KEY may be replaced by any API token needed for the user's preferred LLM. Modify config.yaml just in case the user wants to make use of a specific LLM
 
 
 ```sh
@@ -72,7 +72,7 @@ runtime: python39
 entrypoint: pipenv run streamlit run src/main.py
 
 env_variables:
-  HUGGINGFACEHUB_API_TOKEN: your_huggingfacehub_api_token
+  OPENAI_API_KEY: your_openai_api_token
   GOOGLE_APPLICATION_CREDENTIALS: path/to/your/credentials.json
 
 handlers:
